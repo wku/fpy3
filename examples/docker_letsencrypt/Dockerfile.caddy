@@ -1,0 +1,11 @@
+FROM caddy:builder AS builder
+
+# Build Caddy with Cloudflare DNS plugin (most popular)
+# You can change 'cloudflare' to another provider:
+# https://github.com/caddy-dns
+RUN xcaddy build \
+    --with github.com/caddy-dns/cloudflare
+
+FROM caddy:latest
+
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy

@@ -1,0 +1,78 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PEP 582
+__pypackages__/
+
+# ---- Build & packaging ----
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# ---- Virtual environments / package managers ----
+.venv/
+venv/
+env/
+ENV/
+.python-version
+pip-wheel-metadata/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ---- Tests & coverage ----
+.pytest_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache/
+nosetests.xml
+coverage.xml
+htmlcov/
+.pyre/
+.pytype/
+.mypy_cache/
+.ruff_cache/
+
+# ---- C/C++/CFFI build artifacts ----
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.so
+*.dylib
+*.dll
+*.pyd
+*.gcda
+*.gcno
+*.gcov
+
+# ---- Meson / Ninja ----
+builddir/
+meson-logs/
+meson-private/
+.ninja_log
+.ninja_deps
+compile_commands.json
+
+# ---- Logs & runtime output ----
+*.log
+logs/
+
+# ---- Editors / IDEs ----
+.idea/
+.vscode/
+*.iml
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- Astral uv ----
+.uv/

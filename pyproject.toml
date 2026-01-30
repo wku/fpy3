@@ -1,0 +1,20 @@
+[build-system]
+requires = ["meson-python", "ninja", "wheel", "setuptools"]
+build-backend = "mesonpy"
+
+[project]
+name = "fpy"
+version = "0.1.0"
+description = "Fast Python server (fpy)"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+  {name = "Fast Python server", email = "fpy@google.com"}
+]
+dependencies = [
+    "uvloop>=0.14.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/example/fpy"

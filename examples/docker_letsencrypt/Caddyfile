@@ -1,0 +1,24 @@
+{
+    # Enable HTTP/3
+    servers {
+        protocol {
+            experimental_http3
+        }
+    }
+}
+
+# Replace 'dev.example.com' with your domain
+dev.example.com {
+    # DNS-01 Challenge Configuration
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+
+    # Proxy to FPY App
+    reverse_proxy app:8080 {
+        # Trust upstream self-signed certs (since FPY uses mkcert internally or self-signed)
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}

@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/wtf.dir/deps/ls-qpack/lsqpack.c.o"
+  "CMakeFiles/wtf.dir/deps/ls-qpack/lsqpack.c.o.d"
+  "CMakeFiles/wtf.dir/deps/tinycthreads/tinycthread.c.o"
+  "CMakeFiles/wtf.dir/deps/tinycthreads/tinycthread.c.o.d"
+  "CMakeFiles/wtf.dir/deps/xxhash/xxhash.c.o"
+  "CMakeFiles/wtf.dir/deps/xxhash/xxhash.c.o.d"
+  "CMakeFiles/wtf.dir/src/conn.c.o"
+  "CMakeFiles/wtf.dir/src/conn.c.o.d"
+  "CMakeFiles/wtf.dir/src/context.c.o"
+  "CMakeFiles/wtf.dir/src/context.c.o.d"
+  "CMakeFiles/wtf.dir/src/datagram.c.o"
+  "CMakeFiles/wtf.dir/src/datagram.c.o.d"
+  "CMakeFiles/wtf.dir/src/http3.c.o"
+  "CMakeFiles/wtf.dir/src/http3.c.o.d"
+  "CMakeFiles/wtf.dir/src/log.c.o"
+  "CMakeFiles/wtf.dir/src/log.c.o.d"
+  "CMakeFiles/wtf.dir/src/qpack.c.o"
+  "CMakeFiles/wtf.dir/src/qpack.c.o.d"
+  "CMakeFiles/wtf.dir/src/server.c.o"
+  "CMakeFiles/wtf.dir/src/server.c.o.d"
+  "CMakeFiles/wtf.dir/src/session.c.o"
+  "CMakeFiles/wtf.dir/src/session.c.o.d"
+  "CMakeFiles/wtf.dir/src/settings.c.o"
+  "CMakeFiles/wtf.dir/src/settings.c.o.d"
+  "CMakeFiles/wtf.dir/src/stream.c.o"
+  "CMakeFiles/wtf.dir/src/stream.c.o.d"
+  "CMakeFiles/wtf.dir/src/utils.c.o"
+  "CMakeFiles/wtf.dir/src/utils.c.o.d"
+  "CMakeFiles/wtf.dir/src/varint.c.o"
+  "CMakeFiles/wtf.dir/src/varint.c.o.d"
+  "output/libwtf.pdb"
+  "output/libwtf.so"
+  "output/libwtf.so.0"
+  "output/libwtf.so.0.0.0"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/wtf.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

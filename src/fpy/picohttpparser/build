@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -ex
+
+gcc -c picohttpparser.c -O3 -fpic -msse4.2
+gcc -shared -o libpicohttpparser.so picohttpparser.o
+if [[ `uname` == "Darwin" ]]
+then
+    strip -x libpicohttpparser.so
+else
+    strip libpicohttpparser.so
+fi

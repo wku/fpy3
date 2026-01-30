@@ -1,0 +1,10 @@
+vendor/
+.git/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+.gemini/

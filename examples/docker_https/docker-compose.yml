@@ -1,0 +1,18 @@
+services:
+  fpy:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    image: fpy-local
+    command: python3.12 hello_world.py --debug --host 0.0.0.0
+    ports:
+      - "8080:8080/tcp"
+      - "8080:8080/udp"
+    volumes:
+      - ./cert.pem:/app/cert.pem:ro
+      - ./key.pem:/app/key.pem:ro
+    environment:
+      # Ensure libraries are found (Dockerfile usually sets this, but reinforcing)
+      - PYTHONUNBUFFERED=1
+    cap_add:
+      - NET_ADMIN # Optional, sometimes needed for QUIC

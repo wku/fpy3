@@ -1,0 +1,30 @@
+services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--api.insecure=true"
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # Enable HTTP/3 with explicit advertisement
+      - "--entrypoints.websecure.http3=true"
+      - "--entrypoints.websecure.http3.advertisedPort=443"
+      - "--log.level=DEBUG"
+    ports:
+      - "80:80"
+      - "443:443/tcp"
+      - "443:443/udp"
+      - "8081:8080" # Traefik Dashboard
+    volumes:
+      - ./traefik_dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./cert.pem:/certs/cert.pem:ro
+      - ./key.pem:/certs/key.pem:ro
+
+  app:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    command: python3.12 hello_world.py --debug --host 0.0.0.0
+    # No ports exposed to host directly! Traefik routes to it via overlay network (default).
+    environment:
+      - PYTHONUNBUFFERED=1

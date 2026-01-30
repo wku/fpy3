@@ -1,0 +1,38 @@
+services:
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
+    ports:
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    command: python3.12 hello_world.py --debug --host 0.0.0.0
+    ports:
+      - "8080:8080/tcp"
+      - "8080:8080/udp"
+    # We still mounts certs for internal logic, or app can run HTTP.
+    # But FPY ASGIServer is hardcoded to TLS for now?
+    # Yes, ASGIServer needs certs to start.
+    # We can use the dummy mkcert ones just to start the app.
+    volumes:
+      - ../docker_https/cert.pem:/app/cert.pem:ro
+      - ../docker_https/key.pem:/app/key.pem:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  caddy_data:
+  caddy_config:

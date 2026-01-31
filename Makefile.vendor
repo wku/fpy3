@@ -1,0 +1,115 @@
+PROJECT_ROOT := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
+VENDOR_DIR := $(PROJECT_ROOT)vendor
+BUILD_DIR := $(VENDOR_DIR)/build
+DIST_DIR := $(VENDOR_DIR)/dist
+NPROC := $(shell nproc)
+
+.PHONY: help setup rebuild clean clean-all clone-all
+
+help:
+	@echo "FPY Vendor Dependencies"
+	@echo ""
+	@echo "make -f Makefile.vendor setup      - Clone, init and build all"
+	@echo "make -f Makefile.vendor rebuild    - Rebuild dependencies"
+	@echo "make -f Makefile.vendor clean      - Remove build artifacts"
+	@echo "make -f Makefile.vendor clean-all  - Remove everything"
+	@echo "make -f Makefile.vendor help       - Show this help"
+
+setup: clone-all build-msquic build-nghttp3 build-libwtf verify
+	@echo ""
+	@echo "✓ Setup complete"
+
+rebuild: clean build-msquic build-nghttp3 build-libwtf verify
+	@echo ""
+	@echo "✓ Rebuild complete"
+
+clone-all: $(VENDOR_DIR)/msquic $(VENDOR_DIR)/nghttp3 $(VENDOR_DIR)/libwtf
+
+$(VENDOR_DIR)/msquic:
+	@echo "Cloning msquic with submodules..."
+	@mkdir -p $(VENDOR_DIR)
+	@git clone --recursive https://github.com/microsoft/msquic.git $(VENDOR_DIR)/msquic
+	@echo "  ✓ msquic cloned"
+
+$(VENDOR_DIR)/nghttp3:
+	@echo "Cloning nghttp3..."
+	@mkdir -p $(VENDOR_DIR)
+	@git clone --recursive https://github.com/ngtcp2/nghttp3.git $(VENDOR_DIR)/nghttp3
+	@echo "  ✓ nghttp3 cloned"
+
+$(VENDOR_DIR)/libwtf:
+	@echo "Cloning libwtf..."
+	@mkdir -p $(VENDOR_DIR)
+	@git clone --recursive https://github.com/andrewmd5/libwtf.git $(VENDOR_DIR)/libwtf
+	@echo "  ✓ libwtf cloned"
+
+build-msquic: $(VENDOR_DIR)/msquic
+	@echo "Building msquic..."
+	@mkdir -p $(BUILD_DIR)/msquic
+	@cd $(BUILD_DIR)/msquic && \
+	cmake $(VENDOR_DIR)/msquic \
+		-GNinja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=$(DIST_DIR) \
+		-DQUIC_BUILD_SHARED=ON \
+		-DQUIC_BUILD_STATIC=ON \
+		-DQUIC_BUILD_TEST=OFF \
+		-DQUIC_BUILD_TOOLS=OFF \
+		-DQUIC_BUILD_PERF=OFF \
+		-DQUIC_ENABLE_LOGGING=OFF > /dev/null 2>&1 && \
+	ninja -j $(NPROC) > /dev/null 2>&1 && \
+	ninja install > /dev/null 2>&1 || (echo "ERROR: msquic build failed"; exit 1)
+	@echo "  ✓ libmsquic.so"
+
+build-nghttp3: $(VENDOR_DIR)/nghttp3
+	@echo "Building nghttp3..."
+	@mkdir -p $(BUILD_DIR)/nghttp3
+	@cd $(BUILD_DIR)/nghttp3 && \
+	cmake $(VENDOR_DIR)/nghttp3 \
+		-GNinja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=$(DIST_DIR) \
+		-DENABLE_LIB_ONLY=ON \
+		-DENABLE_SHARED_LIB=ON \
+		-DENABLE_STATIC_LIB=OFF \
+		-DBUILD_TESTING=OFF > /dev/null 2>&1 && \
+	ninja -j $(NPROC) > /dev/null 2>&1 && \
+	ninja install > /dev/null 2>&1 || (echo "ERROR: nghttp3 build failed"; exit 1)
+	@echo "  ✓ libnghttp3.so"
+
+build-libwtf: build-msquic build-nghttp3 $(VENDOR_DIR)/libwtf
+	@echo "Building libwtf..."
+	@mkdir -p $(BUILD_DIR)/libwtf
+	@cd $(BUILD_DIR)/libwtf && \
+	cmake $(VENDOR_DIR)/libwtf \
+		-GNinja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=$(DIST_DIR) \
+		-DCMAKE_PREFIX_PATH=$(DIST_DIR) \
+		-DMSQUIC_INCLUDE_DIRS=$(DIST_DIR)/include \
+		-DMSQUIC_LIBRARIES=$(DIST_DIR)/lib/libmsquic.so \
+		-DNGHTTP3_INCLUDE_DIR=$(DIST_DIR)/include \
+		-DNGHTTP3_LIBRARIES=$(DIST_DIR)/lib/libnghttp3.so \
+		-DWTF_BUILD_TESTS=OFF \
+		-DWTF_BUILD_SAMPLES=OFF > /dev/null 2>&1 && \
+	ninja -j $(NPROC) > /dev/null 2>&1 && \
+	ninja install > /dev/null 2>&1 || (echo "ERROR: libwtf build failed"; exit 1)
+	@echo "  ✓ libwtf.a"
+
+verify:
+	@echo ""
+	@echo "Verifying artifacts..."
+	@if [ ! -f $(DIST_DIR)/lib/libmsquic.so ]; then echo "ERROR: libmsquic.so not found"; exit 1; fi
+	@if [ ! -f $(DIST_DIR)/lib/libnghttp3.so ]; then echo "ERROR: libnghttp3.so not found"; exit 1; fi
+	@if [ ! -d $(DIST_DIR)/include ] || [ -z "$$(ls -A $(DIST_DIR)/include)" ]; then echo "ERROR: headers not found"; exit 1; fi
+	@echo "  ✓ All artifacts present"
+
+clean:
+	@echo "Cleaning build artifacts..."
+	@rm -rf $(BUILD_DIR) $(DIST_DIR)
+	@echo "Done"
+
+clean-all: clean
+	@echo "Cleaning all including sources..."
+	@rm -rf $(VENDOR_DIR)
+	@echo "Done"

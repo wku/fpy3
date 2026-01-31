@@ -1,0 +1,14 @@
+[submodule "vendor/msquic"]
+	path = vendor/msquic
+	url = https://github.com/microsoft/msquic.git
+	shallow = false
+
+[submodule "vendor/nghttp3"]
+	path = vendor/nghttp3
+	url = https://github.com/ngtcp2/nghttp3.git
+	shallow = false
+
+[submodule "vendor/libwtf"]
+	path = vendor/libwtf
+	url = https://github.com/andrewmd5/libwtf.git
+	shallow = false

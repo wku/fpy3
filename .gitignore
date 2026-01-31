@@ -61,6 +61,10 @@ meson-private/
 .ninja_deps
 compile_commands.json
 
+# ---- Vendor build artifacts ----
+vendor/dist/
+vendor/build/
+
 # ---- Logs & runtime output ----
 *.log
 logs/
@@ -69,6 +73,9 @@ logs/
 .idea/
 .vscode/
 *.iml
+*.swp
+*.swo
+*~
 
 # ---- OS files ----
 .DS_Store

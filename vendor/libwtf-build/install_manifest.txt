@@ -1,5 +1,0 @@
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/dist/include/wtf.h
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/dist/lib/libwtf.so.0.0.0
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/dist/lib/libwtf.so.0
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/dist/lib/libwtf.so
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/dist/include/wtf.h

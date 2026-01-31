@@ -1,7 +1,0 @@
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/wtf.dir
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/edit_cache.dir
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/rebuild_cache.dir
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/list_install_components.dir
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/install.dir
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/install/local.dir
-/home/wku/WKU/new_src/korysnyk/fpy/vendor/libwtf-build/CMakeFiles/install/strip.dir

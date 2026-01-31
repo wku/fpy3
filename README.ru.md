@@ -1,70 +1,70 @@
 # FPY3: High-Performance HTTP/3 Server
 
-`fpy3` is a high-performance asynchronous HTTP/3 (QUIC) server for Python 3.12+, built on `MsQuic`, `nghttp3` and `uvloop`.
+`fpy3` - высокопроизводительный асинхронный HTTP/3 (QUIC) сервер для Python 3.12+, построенный на `MsQuic`, `nghttp3` и `uvloop`.
 
-## Features
-- **HTTP/3 and QUIC** - native support via `MsQuic` and `nghttp3`
-- **HTTP/1.1 Fallback** - automatic support for older browsers
-- **Alt-Svc Discovery** - automatic upgrade to HTTP/3
-- **ASGI 3.0** - full compatibility via `ASGIServer`
-- **High Performance** - critical paths implemented in C
+## Возможности
+- **HTTP/3 и QUIC** - нативная поддержка через `MsQuic` и `nghttp3`
+- **HTTP/1.1 Fallback** - автоматическая поддержка старых браузеров
+- **Alt-Svc Discovery** - автоматический апгрейд на HTTP/3
+- **ASGI 3.0** - полная совместимость через `ASGIServer`
+- **Высокая производительность** - критические пути реализованы на C
 
-## Installation
+## Установка
 
-### Requirements
+### Требования
 - Python 3.12+
 - GCC/Clang, CMake, Ninja, Autotools, pkg-config
 - OpenSSL dev headers
 
-### Local Build
+### Локальная сборка
 
 ```bash
-# 1. Build dependencies (MsQuic, nghttp3)
+# 1. Сборка зависимостей (MsQuic, nghttp3)
 ./scripts/build_deps.sh
 
-# 2. Install package
+# 2. Установка пакета
 pip install .
 ```
 
-Libraries `libmsquic.so.2` and `libnghttp3.so.9` are bundled into the package automatically.
+Библиотеки `libmsquic.so.2` и `libnghttp3.so.9` бандлятся в пакет автоматически.
 
 ### Docker
 
 ```bash
 cd examples/docker_https
-# Generate certificates (see "Certificates" section)
+# Сгенерируйте сертификаты (см. раздел "Сертификаты")
 docker-compose up --build
 ```
 
-## Certificates
+## Сертификаты
 
-TLS certificates are required for HTTPS/QUIC.
+Для HTTPS/QUIC требуются TLS-сертификаты.
 
-### Local Development (mkcert)
+### Локальная разработка (mkcert)
 
 ```bash
-# Install mkcert (Ubuntu/Debian)
+# Установка mkcert (Ubuntu/Debian)
 sudo apt install libnss3-tools
 curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
 chmod +x mkcert-v*-linux-amd64
 sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
 
-# Create local CA
+# Создание локального CA
 mkcert -install
 
-# Generate certificates
+# Генерация сертификатов
 mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1 ::1
 ```
 
-### Production (Let's Encrypt)
+### Продакшн (Let's Encrypt)
 
-Use certbot or an ACME client to obtain real certificates.
+Используйте certbot или ACME-клиент для получения реальных сертификатов.
 
-## Usage
+## Использование
 
-### Quick Start (ASGI)
+### Быстрый старт (ASGI)
 
-File `hello_world.py`:
+Файл `hello_world.py`:
 
 ```python
 import asyncio
@@ -94,26 +94,26 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-### Running
+### Запуск
 
 ```bash
 export LD_LIBRARY_PATH=$(pwd)/vendor/dist/lib
 python3.12 hello_world.py --debug --host 0.0.0.0 --port 8080
 ```
 
-## Testing
+## Тестирование
 
 ### HTTP/1.1 (curl)
 
 ```bash
-# Check content
+# Проверка контента
 curl -k https://127.0.0.1:8080/
 
-# Check headers (including Alt-Svc)
+# Проверка заголовков (включая Alt-Svc)
 curl -k -I https://127.0.0.1:8080/
 ```
 
-Expected output:
+Ожидаемый вывод:
 ```
 HTTP/1.1 200 OK
 Alt-Svc: h3=":8080"; ma=3600
@@ -121,20 +121,20 @@ Content-Length: 40
 content-type: text/plain
 ```
 
-### HTTP/3 (Python client)
+### HTTP/3 (Python клиент)
 
 ```bash
 export LD_LIBRARY_PATH=$(pwd)/vendor/dist/lib
 python3.12 test_http3_client.py
 ```
 
-### HTTP/3 (Chrome with forced QUIC)
+### HTTP/3 (Chrome с принудительным QUIC)
 
 ```bash
-# Close all Chrome windows
+# Закройте все окна Chrome
 pkill -9 chrome
 
-# Launch with flag
+# Запустите с флагом
 google-chrome \
   --user-data-dir=/tmp/chrome_quic_test \
   --origin-to-force-quic-on=127.0.0.1:8080 \
@@ -142,51 +142,51 @@ google-chrome \
   https://127.0.0.1:8080
 ```
 
-In DevTools (F12) -> Network -> "Protocol" column should show `h3`.
+В DevTools (F12) -> Network -> колонка "Protocol" должна показывать `h3`.
 
-### HTTP/3 (Chrome with Alt-Svc discovery)
+### HTTP/3 (Chrome с Alt-Svc discovery)
 
-For operation without flags, the browser must trust the certificate:
+Для работы без флагов браузер должен доверять сертификату:
 
-1. Find the path to Root CA:
+1. Найдите путь к Root CA:
    ```bash
    mkcert -CAROOT
    ```
 
-2. Import into Chrome:
+2. Импортируйте в Chrome:
    - `chrome://settings/certificates` -> Authorities -> Import
-   - Select `rootCA.pem` from the path above
-   - Enable "Trust for websites"
+   - Выберите `rootCA.pem` из пути выше
+   - Включите "Trust for websites"
 
-3. Restart Chrome and open `https://127.0.0.1:8080/`
+3. Перезапустите Chrome и откройте `https://127.0.0.1:8080/`
 
-## Docker Examples
+## Docker примеры
 
-### Simple HTTPS (docker_https)
+### Простой HTTPS (docker_https)
 
 ```bash
 cd examples/docker_https
 
-# Generate certificates
+# Сгенерируйте сертификаты
 mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1
 
 docker-compose up --build
 ```
 
-### With Traefik (docker_traefik_nip)
+### С Traefik (docker_traefik_nip)
 
 ```bash
 cd examples/docker_traefik_nip
 
-# Generate wildcard certificate
+# Сгенерируйте wildcard сертификат
 mkcert -key-file key.pem -cert-file cert.pem "*.127.0.0.1.nip.io" localhost 127.0.0.1
 
 docker-compose up --build
 ```
 
-Open `https://app.127.0.0.1.nip.io/`
+Откройте `https://app.127.0.0.1.nip.io/`
 
-## Architecture
+## Архитектура
 
 ```
                     +------------------+
@@ -201,23 +201,23 @@ Client (HTTP/3)   ->|  QUIC Listener   |-> ASGI App -> HTTP/3 Response
                     +------------------+
 ```
 
-## Troubleshooting
+## Решение проблем
 
 ### ImportError: libmsquic.so.2
 
 ```bash
-# Make sure dependencies are built
+# Убедитесь что зависимости собраны
 ./scripts/build_deps.sh
 
-# Reinstall package
+# Переустановите пакет
 pip install --force-reinstall .
 ```
 
-### ERR_QUIC_PROTOCOL_ERROR in browser
+### ERR_QUIC_PROTOCOL_ERROR в браузере
 
-Browser does not trust the certificate. Import Root CA into the browser (see "HTTP/3 Chrome with Alt-Svc discovery" section).
+Браузер не доверяет сертификату. Импортируйте Root CA в браузер (см. раздел "HTTP/3 Chrome с Alt-Svc discovery").
 
-### Port already in use
+### Порт уже занят
 
 ```bash
 pkill -f hello_world.py
@@ -235,8 +235,8 @@ server.start(host, port)
 ```
 
 - `app` - ASGI 3.0 callable
-- `loop` - asyncio event loop (optional)
-- `debug` - enable debug logs
+- `loop` - asyncio event loop (опционально)
+- `debug` - включить отладочные логи
 
 ### ASGI Scope
 

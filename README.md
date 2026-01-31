@@ -1,6 +1,6 @@
 # FPY: High-Performance HTTP/3 Server
 
-`fpy` - высокопроизводительный асинхронный HTTP/3 (QUIC) сервер для Python 3.12+, построенный на `MsQuic`, `nghttp3` и `uvloop`.
+`fpy3` - высокопроизводительный асинхронный HTTP/3 (QUIC) сервер для Python 3.12+, построенный на `MsQuic`, `nghttp3` и `uvloop`.
 
 ## Возможности
 - **HTTP/3 и QUIC** - нативная поддержка через `MsQuic` и `nghttp3`
@@ -69,7 +69,7 @@ mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1 ::1
 ```python
 import asyncio
 import uvloop
-from fpy.asgi import ASGIServer
+from fpy3.asgi import ASGIServer
 
 async def app(scope, receive, send):
     if scope['type'] == 'http':
@@ -77,7 +77,7 @@ async def app(scope, receive, send):
         await send({
             'type': 'http.response.start',
             'status': 200,
-            'headers': [(b'content-type', b'text/plain'), (b'server', b'fpy-asgi')]
+            'headers': [(b'content-type', b'text/plain'), (b'server', b'fpy3-asgi')]
         })
         await send({
             'type': 'http.response.body',
@@ -228,7 +228,7 @@ pkill -f hello_world.py
 ### ASGIServer
 
 ```python
-from fpy.asgi import ASGIServer
+from fpy3.asgi import ASGIServer
 
 server = ASGIServer(app, loop=None, debug=False)
 server.start(host, port)

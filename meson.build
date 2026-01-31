@@ -1,6 +1,6 @@
-project('fpy', 'c', version: '0.1.0', default_options: ['warning_level=0', 'werror=false'])
+project('fpy3', 'c', version: '0.1.0', default_options: ['warning_level=0', 'werror=false'])
 
-py = import('python').find_installation(pure: false)
+py = import('python').find_installation()
 py_dep = py.dependency()
 
 fs = import('fs')
@@ -10,14 +10,14 @@ use_vendored = fs.is_dir(vendored_include)
 
 # Common Include Directories
 base_inc_dirs = [
-  'src/fpy/c_impl',
-  'src/fpy/protocol/c_impl',
-  'src/fpy/request/c_impl',
-  'src/fpy/response/c_impl',
-  'src/fpy/router/c_impl',
-  'src/fpy/parser/c_impl',
-  'src/fpy/pipeline/c_impl',
-  'src/fpy/picohttpparser'
+  'src/fpy3/c_impl',
+  'src/fpy3/protocol/c_impl',
+  'src/fpy3/request/c_impl',
+  'src/fpy3/response/c_impl',
+  'src/fpy3/router/c_impl',
+  'src/fpy3/parser/c_impl',
+  'src/fpy3/pipeline/c_impl',
+  'src/fpy3/picohttpparser'
 ]
 if use_vendored
   inc_dirs = include_directories(base_inc_dirs, vendored_include)
@@ -39,18 +39,18 @@ endif
 
 # Static Lib (Scalar Only to avoid build issues)
 pico_lib = static_library('pico_scalar',
-  'src/fpy/picohttpparser/picohttpparser.c',
+  'src/fpy3/picohttpparser/picohttpparser.c',
   c_args: [], 
   include_directories: inc_dirs,
   pic: true
 )
 
 # Common Sources
-capsule_src = 'src/fpy/c_impl/capsule.c'
-match_dict_src = 'src/fpy/router/c_impl/match_dict.c'
+capsule_src = 'src/fpy3/c_impl/capsule.c'
+match_dict_src = 'src/fpy3/router/c_impl/match_dict.c'
 
 # Python Sources (Install main package)
-install_subdir('src/fpy', 
+install_subdir('src/fpy3', 
   install_dir: py.get_install_dir(),
   exclude_directories: [
     'c_impl', 
@@ -70,8 +70,8 @@ install_subdir('src/fpy',
 py.extension_module(
   'crequest',
   sources: [
-    'src/fpy/request/c_impl/crequest.c',
-    'src/fpy/response/c_impl/cresponse.c',
+    'src/fpy3/request/c_impl/crequest.c',
+    'src/fpy3/response/c_impl/cresponse.c',
     match_dict_src,
     capsule_src
   ],
@@ -80,28 +80,28 @@ py.extension_module(
   c_args: ['-DREQUEST_OPAQUE'], 
   dependencies: [py_dep],
   install: true,
-  subdir: 'fpy/request'
+  subdir: 'fpy3/request'
 )
 
 # 2. response.cresponse
 py.extension_module(
   'cresponse',
   sources: [
-     'src/fpy/response/c_impl/cresponse.c',
+     'src/fpy3/response/c_impl/cresponse.c',
      capsule_src
   ],
   include_directories: inc_dirs,
   c_args: ['-DRESPONSE_OPAQUE'],
   dependencies: [py_dep],
   install: true,
-  subdir: 'fpy/response'
+  subdir: 'fpy3/response'
 )
 
 # 3. parser.cparser
 py.extension_module(
   'cparser',
   sources: [
-      'src/fpy/parser/c_impl/cparser.c',
+      'src/fpy3/parser/c_impl/cparser.c',
       capsule_src
   ],
   include_directories: inc_dirs,
@@ -109,67 +109,67 @@ py.extension_module(
   c_args: [],
   dependencies: [py_dep],
   install: true,
-  subdir: 'fpy/parser'
+  subdir: 'fpy3/parser'
 )
 
 # 4. pipeline.cpipeline
 py.extension_module(
   'cpipeline',
   sources: [
-      'src/fpy/pipeline/c_impl/cpipeline.c',
+      'src/fpy3/pipeline/c_impl/cpipeline.c',
       capsule_src
   ],
   include_directories: inc_dirs,
   dependencies: [py_dep],
   install: true,
-  subdir: 'fpy/pipeline'
+  subdir: 'fpy3/pipeline'
 )
 
 # 5. router.cmatcher
 py.extension_module(
   'cmatcher',
   sources: [
-      'src/fpy/router/c_impl/cmatcher.c',
+      'src/fpy3/router/c_impl/cmatcher.c',
       match_dict_src,
       capsule_src
   ],
   include_directories: inc_dirs,
   dependencies: [py_dep],
   install: true,
-  subdir: 'fpy/router'
+  subdir: 'fpy3/router'
 )
 
 # 6. protocol.cprotocol
 py.extension_module(
   'cprotocol',
   sources: [
-     'src/fpy/protocol/c_impl/cprotocol.c',
-     'src/fpy/protocol/c_impl/creaper.c',
+     'src/fpy3/protocol/c_impl/cprotocol.c',
+     'src/fpy3/protocol/c_impl/creaper.c',
      capsule_src,
-     'src/fpy/request/c_impl/crequest.c',
-     'src/fpy/response/c_impl/cresponse.c',
-     'src/fpy/parser/c_impl/cparser.c',
-     'src/fpy/pipeline/c_impl/cpipeline.c'
+     'src/fpy3/request/c_impl/crequest.c',
+     'src/fpy3/response/c_impl/cresponse.c',
+     'src/fpy3/parser/c_impl/cparser.c',
+     'src/fpy3/pipeline/c_impl/cpipeline.c'
   ],
   include_directories: inc_dirs,
   link_with: pico_lib,
   c_args: ['-DPIPELINE_PAIR', '-DREAPER_ENABLED'],
   dependencies: [py_dep],
   install: true,
-  subdir: 'fpy/protocol'
+  subdir: 'fpy3/protocol'
 )
 
 # 7. protocol.creaper
 py.extension_module(
   'creaper',
     sources: [
-        'src/fpy/protocol/c_impl/creaper.c',
+        'src/fpy3/protocol/c_impl/creaper.c',
         capsule_src
     ],
     include_directories: inc_dirs,
     dependencies: [py_dep],
     install: true,
-    subdir: 'fpy/protocol'
+    subdir: 'fpy3/protocol'
 )
 
 # 8. protocol.cquic
@@ -182,31 +182,31 @@ if use_vendored
   py.extension_module(
     'cquic',
     sources: [
-      'src/fpy/protocol/c_impl/cquic.c',
+      'src/fpy3/protocol/c_impl/cquic.c',
       capsule_src
     ],
     include_directories: inc_dirs,
     dependencies: cquic_deps,
     install: true,
     install_rpath: '$ORIGIN',
-    subdir: 'fpy/protocol'
+    subdir: 'fpy3/protocol'
   )
   # Install shared libraries to the package directory for self-contained build
   install_data(
     'vendor/dist/lib/libmsquic.so.2',
     'vendor/dist/lib/libnghttp3.so.9',
-    install_dir: py.get_install_dir() / 'fpy/protocol'
+    install_dir: py.get_install_dir() / 'fpy3/protocol'
   )
 else
   py.extension_module(
     'cquic',
     sources: [
-      'src/fpy/protocol/c_impl/cquic.c',
+      'src/fpy3/protocol/c_impl/cquic.c',
       capsule_src
     ],
     include_directories: inc_dirs,
     dependencies: cquic_deps,
     install: true,
-    subdir: 'fpy/protocol'
+    subdir: 'fpy3/protocol'
   )
 endif

@@ -1,7 +1,7 @@
 
 import asyncio
 import sys
-from fpy.asgi import ASGIServer
+from fpy3.asgi import ASGIServer
 
 async def echo_app(scope, receive, send):
     if scope['type'] != 'http':

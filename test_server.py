@@ -1,6 +1,6 @@
 
 import asyncio
-from fpy.protocol import cquic
+from fpy3.protocol import cquic
 
 class AppServer(cquic.QuicServer):
     def __init__(self, app, loop):

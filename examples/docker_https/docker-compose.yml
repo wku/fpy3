@@ -1,9 +1,9 @@
 services:
-  fpy:
+  fpy3:
     build:
       context: ../../
       dockerfile: Dockerfile
-    image: fpy-local
+    image: fpy3-local
     command: python3.12 hello_world.py --debug --host 0.0.0.0
     ports:
       - "8080:8080/tcp"

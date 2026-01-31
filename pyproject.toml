@@ -3,7 +3,7 @@ requires = ["meson-python", "ninja", "wheel", "setuptools"]
 build-backend = "mesonpy"
 
 [project]
-name = "fpy"
+name = "fpy3"
 version = "0.1.0"
 description = "Fast Python server (fpy)"
 readme = "README.md"

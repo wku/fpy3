@@ -37,7 +37,7 @@ RUN git clone --recursive https://github.com/ngtcp2/nghttp3.git vendor/nghttp3 &
 # Copy project files
 COPY . .
 
-# Install fpy
+# Install fpy3
 RUN pip install .
 
 # Set library path

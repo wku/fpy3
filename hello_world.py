@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from fpy.asgi import ASGIServer
+from fpy3.asgi import ASGIServer
 import argparse
 
 logging.basicConfig(level=logging.INFO)
